@@ -50,7 +50,15 @@ class MainActivity : AppCompatActivity() {
             super.run()
 
             repeat(30) { indice ->
-                Log.i("TAG", "onCreate: $indice T: ${currentThread().name}")
+                Log.i("TAG", "Executando: $indice T: ${currentThread().name}")
+                runOnUiThread {
+                    binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
+                    binding.buttonIniciar.isEnabled = false
+                    if (indice == 29){
+                        binding.buttonIniciar.text = "Reiniciar execução"
+                        binding.buttonIniciar.isEnabled = true
+                    }
+                }
                 sleep(1000)
 
             }

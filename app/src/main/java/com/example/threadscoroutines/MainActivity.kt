@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private var pararThread = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,8 +32,29 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        binding.buttonParar.setOnClickListener {
+            pararThread = true
+            binding.buttonIniciar.text = "Reiniciar execução"
+            binding.buttonIniciar.isEnabled = true
+        }
+
         binding.buttonIniciar.setOnClickListener {
-            MinhaThread().start()
+            //MinhaThread().start()
+            Thread(MinhaRunnable()).start()
+            /*Thread{
+                repeat(30) { indice ->
+                    Log.i("TAG", "Executando: $indice T: ${currentThread().name}")
+                    runOnUiThread {
+                        binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
+                        binding.buttonIniciar.isEnabled = false
+                        if (indice == 29){
+                            binding.buttonIniciar.text = "Reiniciar execução"
+                            binding.buttonIniciar.isEnabled = true
+                        }
+                    }
+                    sleep(1000)
+                }
+            }*/
             /*repeat(15) { indice ->
                 Log.i("TAG", "onCreate: $indice T: ${currentThread().name}")
                 sleep(1000)
@@ -43,6 +66,30 @@ class MainActivity : AppCompatActivity() {
                 insets
             }
         }
+    }
+
+    inner class MinhaRunnable : Runnable {
+        override fun run() {
+            repeat(30) { indice ->
+
+                if (pararThread) {
+                    pararThread = false
+                    return
+                }
+
+                Log.i("TAG", "Executando: $indice T: ${currentThread().name}")
+                runOnUiThread {
+                    binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
+                    binding.buttonIniciar.isEnabled = false
+                    if (indice == 29){
+                        binding.buttonIniciar.text = "Reiniciar execução"
+                        binding.buttonIniciar.isEnabled = true
+                    }
+                }
+                sleep(1000)
+            }
+        }
+
     }
 
     inner class MinhaThread : Thread() {
@@ -60,7 +107,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 sleep(1000)
-
             }
         }
     }

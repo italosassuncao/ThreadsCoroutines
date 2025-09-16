@@ -10,6 +10,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.threadscoroutines.R
 import com.example.threadscoroutines.SegundaActivity
 import com.example.threadscoroutines.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
 
@@ -40,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttonIniciar.setOnClickListener {
             //MinhaThread().start()
-            Thread(MinhaRunnable()).start()
+            //Thread(MinhaRunnable()).start()
             /*Thread{
                 repeat(30) { indice ->
                     Log.i("TAG", "Executando: $indice T: ${currentThread().name}")
@@ -59,6 +64,18 @@ class MainActivity : AppCompatActivity() {
                 Log.i("TAG", "onCreate: $indice T: ${currentThread().name}")
                 sleep(1000)
             }*/
+
+            CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
+
+                repeat(15) { indice ->
+                    Log.i("info_coroutine", "Executando: $indice T: ${currentThread().name}")
+                    withContext(Dispatchers.Main){ // Execuçao Main
+                        binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
+                    }
+                    delay(1000)
+
+                }
+            }
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

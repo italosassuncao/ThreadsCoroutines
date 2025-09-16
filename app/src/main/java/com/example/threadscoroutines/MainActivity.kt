@@ -10,8 +10,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.threadscoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
 
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var pararThread = false
+    private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonParar.setOnClickListener {
-            pararThread = true
+            //pararThread = true
+            job?.cancel()
             binding.buttonIniciar.text = "Reiniciar execução"
             binding.buttonIniciar.isEnabled = true
         }
@@ -62,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 sleep(1000)
             }*/
 
-            CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
+            job = CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
 
                 /*repeat(15) { indice ->
                     Log.i("info_coroutine", "Executando: $indice T: ${currentThread().name}")
@@ -84,7 +88,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        job?.cancel()
+    }
+
     private suspend fun executar(){
+        repeat(15) { indice ->
+            Log.i("info_coroutine", "Executando: $indice T: ${currentThread().name}")
+            withContext(Dispatchers.Main){ // Execuçao Main
+                binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
+                binding.buttonIniciar.isEnabled = false
+            }
+            delay(1000)
+        }
+    }
+
+    private suspend fun dadosUsuario(){
         val usuario = recuperarUsuarioLogado()
         Log.i("info_coroutine", "Usuario: ${usuario.usuario} T: ${currentThread().name}")
         val postagens = recuperarPostagensId(usuario.id)

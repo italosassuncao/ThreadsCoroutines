@@ -7,14 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.threadscoroutines.R
-import com.example.threadscoroutines.SegundaActivity
 import com.example.threadscoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
 
@@ -67,14 +64,16 @@ class MainActivity : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
 
-                repeat(15) { indice ->
+                /*repeat(15) { indice ->
                     Log.i("info_coroutine", "Executando: $indice T: ${currentThread().name}")
                     withContext(Dispatchers.Main){ // Execuçao Main
                         binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
                     }
                     delay(1000)
 
-                }
+                }*/
+                executar()
+
             }
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -83,6 +82,28 @@ class MainActivity : AppCompatActivity() {
                 insets
             }
         }
+    }
+
+    private suspend fun executar(){
+        val usuario = recuperarUsuarioLogado()
+        Log.i("info_coroutine", "Usuario: ${usuario.usuario} T: ${currentThread().name}")
+        val postagens = recuperarPostagensId(usuario.id)
+        Log.i("info_coroutine", "Postagens: ${postagens.size} T: ${currentThread().name}")
+    }
+
+    private suspend fun recuperarPostagensId(idUsuario: Int): List<String> {
+        delay(2000)
+        return listOf(
+            "Postagem 1",
+            "Postagem 2",
+            "Postagem 3"
+        )
+    }
+
+    private suspend fun recuperarUsuarioLogado(): Usuario {
+        delay(1000)
+        return Usuario(1, "Italo")
+
     }
 
     inner class MinhaRunnable : Runnable {

@@ -11,6 +11,7 @@ import com.example.threadscoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -84,22 +85,16 @@ class MainActivity : AppCompatActivity() {
 
                 val tempo = measureTimeMillis {
 
-                    var resultado1: String? = null
-                    var resultado2: String? = null
+                    val resultado1 = async {tarefa1()}
+                    val resultado2 = async {tarefa2()}
 
-                    val job1 = launch {
-                        resultado1 = tarefa1()
+                    withContext(Dispatchers.Main){
+                        binding.buttonIniciar.text = "${resultado1.await()}"
+                        binding.buttonParar.text = "${resultado2.await()}"
                     }
 
-                    val job2 = launch {
-                        resultado2 = tarefa2()
-                    }
-
-                    job1.join()
-                    job2.join()
-
-                    Log.i("info_coroutine", "Resultado 1: $resultado1")
-                    Log.i("info_coroutine", "Resultado 2: $resultado2")
+                    Log.i("info_coroutine", "Resultado 1: ${resultado1.await()}")
+                    Log.i("info_coroutine", "Resultado 2: ${resultado2.await()}")
 
                 }
                 Log.i("info_coroutine", "Tempo: $tempo")

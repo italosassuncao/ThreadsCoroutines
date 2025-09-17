@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
+import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
 
@@ -77,9 +78,31 @@ class MainActivity : AppCompatActivity() {
                     delay(1000)
 
                 }*/
-                withTimeout(5000L){
+                /*withTimeout(5000L){
                     executar()
+                }*/
+
+                val tempo = measureTimeMillis {
+
+                    var resultado1: String? = null
+                    var resultado2: String? = null
+
+                    val job1 = launch {
+                        resultado1 = tarefa1()
+                    }
+
+                    val job2 = launch {
+                        resultado2 = tarefa2()
+                    }
+
+                    job1.join()
+                    job2.join()
+
+                    Log.i("info_coroutine", "Resultado 1: $resultado1")
+                    Log.i("info_coroutine", "Resultado 2: $resultado2")
+
                 }
+                Log.i("info_coroutine", "Tempo: $tempo")
             }
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -93,6 +116,22 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         job?.cancel()
+    }
+
+    private suspend fun tarefa1(): String {
+        repeat(15) { indice ->
+            Log.i("info_coroutine", "Tarefa1: $indice T: ${currentThread().name}")
+            delay(1000L)
+        }
+        return "Resultado 1"
+    }
+
+    private suspend fun tarefa2(): String {
+        repeat(15) { indice ->
+            Log.i("info_coroutine", "Tarefa2: $indice T: ${currentThread().name}")
+            delay(1000L)
+        }
+        return "Resultado 2"
     }
 
     private suspend fun executar(){

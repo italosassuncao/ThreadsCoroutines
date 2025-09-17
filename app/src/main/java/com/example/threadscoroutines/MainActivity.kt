@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
 
@@ -76,8 +77,9 @@ class MainActivity : AppCompatActivity() {
                     delay(1000)
 
                 }*/
-                executar()
-
+                withTimeout(5000L){
+                    executar()
+                }
             }
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
                 binding.buttonIniciar.isEnabled = false
             }
-            delay(1000)
+            delay(1000L)
         }
     }
 

@@ -7,9 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.threadscoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -30,6 +32,11 @@ class MainActivity : AppCompatActivity() {
     private var pararThread = false
     private var job: Job? = null
 
+    override fun onDestroy() {
+        super.onDestroy()
+        job?.cancel()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(
                 Intent(this, SegundaActivity::class.java)
             )
+            finish()
         }
 
         binding.buttonParar.setOnClickListener {
@@ -51,7 +59,9 @@ class MainActivity : AppCompatActivity() {
         binding.buttonIniciar.setOnClickListener {
 
             //CoroutineScope(Dispatchers.Main).launch {
-            MainScope().launch {
+            //MainScope().launch {
+            //GlobalScope.launch {
+            lifecycleScope.launch { // lifecycle realiza o controle do tempo de execuçao da corrotina
                 repeat(15) { indice ->
                     binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
                     Log.i("info_coroutine",

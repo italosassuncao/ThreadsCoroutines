@@ -48,6 +48,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonIniciar.setOnClickListener {
+
+            CoroutineScope(Dispatchers.Main).launch {
+                repeat(15) { indice ->
+                    Log.i("info_coroutine",
+                        "Executando: $indice T: ${currentThread().name}")
+                    delay(1000L)
+                }
+            }
+
             //MinhaThread().start()
             //Thread(MinhaRunnable()).start()
             /*Thread{
@@ -69,19 +78,19 @@ class MainActivity : AppCompatActivity() {
                 sleep(1000)
             }*/
 
-            job = CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
+            /*job = CoroutineScope(Dispatchers.IO).launch { // Execuçao com IO
 
-                /*repeat(15) { indice ->
+                *//*repeat(15) { indice ->
                     Log.i("info_coroutine", "Executando: $indice T: ${currentThread().name}")
                     withContext(Dispatchers.Main){ // Execuçao Main
                         binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
                     }
                     delay(1000)
 
-                }*/
-                /*withTimeout(5000L){
+                }*//*
+                *//*withTimeout(5000L){
                     executar()
-                }*/
+                }*//*
 
                 val tempo = measureTimeMillis {
 
@@ -98,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 Log.i("info_coroutine", "Tempo: $tempo")
-            }
+            }*/
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

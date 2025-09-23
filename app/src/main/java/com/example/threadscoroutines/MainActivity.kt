@@ -11,6 +11,7 @@ import com.example.threadscoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,8 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttonIniciar.setOnClickListener {
 
-            CoroutineScope(Dispatchers.Main).launch {
+            //CoroutineScope(Dispatchers.Main).launch {
+            MainScope().launch {
                 repeat(15) { indice ->
+                    binding.buttonIniciar.text = "Executando: $indice T: ${currentThread().name}"
                     Log.i("info_coroutine",
                         "Executando: $indice T: ${currentThread().name}")
                     delay(1000L)

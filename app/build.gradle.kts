@@ -42,6 +42,8 @@ android {
 
 dependencies {
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Dependencia Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Dependencia conversor
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4") // Dependencia lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
